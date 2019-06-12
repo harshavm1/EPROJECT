@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:webflow-config="http://www.springframework.org/schema/webflow-config"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	        http://www.springframework.org/schema/beans/spring-beans.xsd 
+            http://www.springframework.org/schema/security  
+            http://www.springframework.org/schema/security/spring-security.xsd  
+            http://www.springframework.org/schema/webflow-config 
+            http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
+
+	<security:http auto-config="true" use-expressions="true">
+		<security:csrf disabled="true" />
+		<security:intercept-url pattern="/" access="permitAll" />
+		<security:intercept-url pattern="/index" access="permitAll" />
+		<security:intercept-url pattern="/user" access="permitAll" />
+		<security:intercept-url pattern="/viewpro" access="permitAll" />
+		<security:intercept-url pattern="/like" access="permitAll" />
+		<security:intercept-url pattern="/order" access="permitAll" />
+		<security:intercept-url pattern="/about" access="permitAll" />
+		<security:intercept-url pattern="/contact" access="permitAll" />
+		
+		<security:intercept-url pattern="/product" access="hasRole('ROLE_ADMIN')" />
+		   <security:intercept-url pattern="/category" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/supplier" access="hasRole('ROLE_ADMIN')" />
+        		<security:intercept-url pattern="/EditUser" access="hasRole('ROLE_ADMIN')" />
+        
+		<security:form-login login-page="/login"
+			authentication-failure-url="/login?error" 
+			login-processing-url="/j_spring_security_check"
+			default-target-url="/" 
+			username-parameter="j_username"
+			password-parameter="j_password" />
+		<security:logout logout-success-url="/login?logout"
+			logout-url="/j_spring_security_logout" />
+	</security:http>
+
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				authorities-by-username-query="SELECT userName, roleName FROM Authentication WHERE userName =?"
+				users-by-username-query="SELECT email,password,'true' as enabled from user WHERE  email=? limit 1"/>
+					
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>
+    
+
+
+
+
